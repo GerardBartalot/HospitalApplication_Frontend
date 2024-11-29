@@ -1,15 +1,27 @@
-package com.example.hospitalapp
+package com.example.hospitalapp.classes
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -28,80 +40,79 @@ val users = listOf(
 )
 
 @Composable
-fun LoginScreen(modifier: Modifier = Modifier) {
+fun LoginScreen(modifier: Modifier = Modifier, onBackPressed: () -> Unit) {
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var loginMessage by remember { mutableStateOf("") }
     var loginMessageColor by remember { mutableStateOf(Color.Transparent) }
 
-    Box(
-        modifier = modifier.fillMaxSize(),
-        contentAlignment = Alignment.TopCenter // Mover todo el contenido hacia la parte superior
+    Column(
+        modifier = modifier.fillMaxSize()
     ) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.padding(top = 32.dp) // Separar el título de los bordes superiores
+
+        // Contenido principal de la pantalla
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.TopCenter // Mover todo el contenido hacia la parte superior
         ) {
-            // Encabezado decorativo para el título
-            Text(
-                text = "Login",
-                color = Color.Black, // Cambiado a negro
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(24.dp)) // Espacio adicional debajo del título
-
-            // Campo de texto para el nombre de usuario
-            TextField(
-                value = username,
-                onValueChange = { username = it },
-                label = { Text("Username") },
-                modifier = Modifier.fillMaxWidth(0.8f)
-            )
-
-            // Campo de texto para la contraseña
-            TextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Password") },
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(0.8f)
-            )
-
-            // Botón de inicio de sesión
-            Button(onClick = {
-                // Lógica de validación del login
-                if (users.any { it.first == username && it.second == password }) {
-                    loginMessage = "Login exitoso"
-                    loginMessageColor = Color.Green
-                } else {
-                    loginMessage = "Nombre de usuario o contraseña incorrectos"
-                    loginMessageColor = Color.Red
-                }
-            }) {
-                Text("Login")
-            }
-
-            // Mensaje de resultado del login
-            if (loginMessage.isNotEmpty()) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                modifier = Modifier.padding(top = 16.dp) // Ajuste para acomodar la barra superior
+            ) {
                 Text(
-                    text = loginMessage,
-                    color = loginMessageColor,
-                    modifier = Modifier.padding(top = 16.dp)
+                    text = "Login",
+                    color = Color.Black,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                TextField(
+                    value = username,
+                    onValueChange = { username = it },
+                    label = { Text("Username") },
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                )
+
+                TextField(
+                    value = password,
+                    onValueChange = { password = it },
+                    label = { Text("Password") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.fillMaxWidth(0.8f)
+                )
+
+                Button(onClick = {
+                    if (users.any { it.first == username && it.second == password }) {
+                        loginMessage = "Login exitoso"
+                        loginMessageColor = Color.Green
+                    } else {
+                        loginMessage = "Nombre de usuario o contraseña incorrectos"
+                        loginMessageColor = Color.Red
+                    }
+                }) {
+                    Text("Login")
+                }
+
+                // Button to go back to main menu
+                Button(onClick = onBackPressed) {
+                    Text(text = "Back")
+                }
+
+                if (loginMessage.isNotEmpty()) {
+                    Text(
+                        text = loginMessage,
+                        color = loginMessageColor,
+                        modifier = Modifier.padding(top = 16.dp)
+                    )
+                }
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun LoginScreenPreview() {
-    LoginScreen()
 }

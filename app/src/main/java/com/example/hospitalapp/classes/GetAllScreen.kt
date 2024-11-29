@@ -1,20 +1,11 @@
 package com.example.hospitalapp.classes
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -22,26 +13,36 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hospitalapp.ui.theme.HospitalAppTheme
 
-
 // Modelo de datos
 data class Nurse(val id: Int, val name: String, val username: String)
 
 // Clase para manejar los datos hardcodeados
 class CreateNurses {
     val nurses = listOf(
-
         Nurse(1, "Nil Arroyo", "ni95_ar"),
         Nurse(2, "Gerard Bartalot", "GeryBar"),
         Nurse(3, "Joan Albert Chias", "Jachias"),
         Nurse(4, "Sergio Arenas", "sejuma"),
-
-        )
+    )
 }
 
 @Composable
-fun NurseApp(viewModel: CreateNurses) {
-    MaterialTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
+fun NurseApp(viewModel: CreateNurses, onBackPressed: () -> Unit) {
+    Surface(modifier = Modifier.fillMaxSize()) {
+        Column {
+            // Botón colocado en la esquina superior izquierda
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                contentAlignment = Alignment.TopStart
+            ) {
+                Button(onClick = onBackPressed) {
+                    Text(text = "Back")
+                }
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            // Lista de enfermeros
             NurseList(nurses = viewModel.nurses)
         }
     }
@@ -84,6 +85,6 @@ fun NurseCard(nurse: Nurse) {
 @Composable
 fun NurseAppPreview() {
     HospitalAppTheme {
-        NurseApp(viewModel = CreateNurses())
+        NurseApp(viewModel = CreateNurses(), onBackPressed = {})
     }
 }
