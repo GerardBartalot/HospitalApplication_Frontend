@@ -1,4 +1,4 @@
-package com.example.hospitalapp
+package com.example.hospitalapp.classes
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -14,10 +14,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.hospitalapp.classes.CreateNurses
-import com.example.hospitalapp.classes.LoginScreen
-import com.example.hospitalapp.classes.NurseApp
-import com.example.hospitalapp.classes.SearchScreen
 import com.example.hospitalapp.ui.theme.HospitalAppTheme
 
 class MainActivity : ComponentActivity() {
