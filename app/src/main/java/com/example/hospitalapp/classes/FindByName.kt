@@ -1,6 +1,6 @@
 package com.example.hospitalapp.classes
 
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,14 +24,26 @@ import androidx.compose.ui.unit.dp
 fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
     var query by remember { mutableStateOf("") }
     var foundNurse by remember { mutableStateOf<Nurse?>(null) }
+    var isSearchPerformed by remember { mutableStateOf(false) } // Nuevo estado para rastrear si se realizó la búsqueda
 
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // Botón "Back" en la parte superior izquierda
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 0.dp, top = 30.dp), // Alineado con el margen izquierdo de los demás elementos
+            contentAlignment = Alignment.TopStart
+        ) {
+            Button(onClick = onBackPressed) {
+                Text(text = "Back")
+            }
+        }
+        Spacer(modifier = Modifier.height(100.dp))
         TextField(
             value = query,
             onValueChange = { query = it },
@@ -40,21 +52,16 @@ fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            if (createNurses.nurses.isNotEmpty()) {
-                foundNurse = createNurses.nurses.find { it.name.contains(query, ignoreCase = true) }
-            }
+            isSearchPerformed = true // Indicar que se realizó la búsqueda
+            foundNurse = createNurses.nurses.find { it.name.contains(query, ignoreCase = true) }
         }) {
             Text(text = "Buscar")
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = onBackPressed) {
-            Text(text = "Back")
         }
         Spacer(modifier = Modifier.height(16.dp))
         foundNurse?.let {
             NurseCard(nurse = it)
         } ?: run {
-            if (query.isNotEmpty()) {
+            if (isSearchPerformed && query.isNotEmpty()) { // Mostrar el mensaje solo si se realizó la búsqueda
                 Text(
                     text = "Enfermero no encontrado",
                     style = MaterialTheme.typography.bodyMedium

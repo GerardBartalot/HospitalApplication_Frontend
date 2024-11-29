@@ -46,72 +46,73 @@ fun LoginScreen(modifier: Modifier = Modifier, onBackPressed: () -> Unit) {
     var loginMessage by remember { mutableStateOf("") }
     var loginMessageColor by remember { mutableStateOf(Color.Transparent) }
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-
-        // Contenido principal de la pantalla
+    Box(modifier = Modifier.fillMaxSize()) {
+        // Botón "Back" alineado con el margen izquierdo de los demás elementos
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.TopCenter // Mover todo el contenido hacia la parte superior
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 32.dp, top = 40.dp), // Alineado al margen izquierdo
+            contentAlignment = Alignment.TopStart
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.padding(top = 16.dp) // Ajuste para acomodar la barra superior
-            ) {
+            Button(onClick = onBackPressed) {
+                Text(text = "Back")
+            }
+        }
+
+        // Contenido principal desplazado hacia abajo
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 120.dp) // Espacio suficiente para separar el contenido del botón "Back"
+        ) {
+            Text(
+                text = "Login",
+                color = Color.Black,
+                fontSize = 28.sp,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            TextField(
+                value = username,
+                onValueChange = { username = it },
+                label = { Text("Username") },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+
+            TextField(
+                value = password,
+                onValueChange = { password = it },
+                label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
+                modifier = Modifier.fillMaxWidth(0.8f)
+            )
+
+            Button(onClick = {
+                if (users.any { it.first == username && it.second == password }) {
+                    loginMessage = "Login exitoso"
+                    loginMessageColor = Color.Green
+                } else {
+                    loginMessage = "Nombre de usuario o contraseña incorrectos"
+                    loginMessageColor = Color.Red
+                }
+            }) {
+                Text("Login")
+            }
+
+            if (loginMessage.isNotEmpty()) {
                 Text(
-                    text = "Login",
-                    color = Color.Black,
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                    text = loginMessage,
+                    color = loginMessageColor,
+                    modifier = Modifier.padding(top = 16.dp)
                 )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                TextField(
-                    value = username,
-                    onValueChange = { username = it },
-                    label = { Text("Username") },
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-
-                TextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text("Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.fillMaxWidth(0.8f)
-                )
-
-                Button(onClick = {
-                    if (users.any { it.first == username && it.second == password }) {
-                        loginMessage = "Login exitoso"
-                        loginMessageColor = Color.Green
-                    } else {
-                        loginMessage = "Nombre de usuario o contraseña incorrectos"
-                        loginMessageColor = Color.Red
-                    }
-                }) {
-                    Text("Login")
-                }
-
-                // Button to go back to main menu
-                Button(onClick = onBackPressed) {
-                    Text(text = "Back")
-                }
-
-                if (loginMessage.isNotEmpty()) {
-                    Text(
-                        text = loginMessage,
-                        color = loginMessageColor,
-                        modifier = Modifier.padding(top = 16.dp)
-                    )
-                }
             }
         }
     }

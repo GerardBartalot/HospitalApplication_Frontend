@@ -71,7 +71,7 @@ fun HomeScreen(onNavigate: (String) -> Unit) {
                 Text(text = "Login", fontSize = 16.sp)
             }
             Button(onClick = { onNavigate("GetAll") }) {
-                Text(text = "FindAll", fontSize = 16.sp)
+                Text(text = "GetAll", fontSize = 16.sp)
             }
             Button(onClick = { onNavigate("FindByName") }) {
                 Text(text = "FindByName", fontSize = 16.sp)

@@ -34,14 +34,14 @@ fun NurseApp(viewModel: CreateNurses, onBackPressed: () -> Unit) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(8.dp),
+                    .padding(start = 16.dp, top = 40.dp),
                 contentAlignment = Alignment.TopStart
             ) {
                 Button(onClick = onBackPressed) {
                     Text(text = "Back")
                 }
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             // Lista de enfermeros
             NurseList(nurses = viewModel.nurses)
         }
