@@ -47,16 +47,21 @@ fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
         TextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("Buscar enfermero por nombre") },
+            label = { Text("Buscar enfermero") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            isSearchPerformed = true // Indicar que se realizó la búsqueda
-            foundNurse = createNurses.nurses.find { it.name.contains(query, ignoreCase = true) }
+            isSearchPerformed = true
+            foundNurse = createNurses.nurses.find { nurse ->
+                nurse.name.contains(query, ignoreCase = true) ||
+                        nurse.username.contains(query, ignoreCase = true) ||
+                        nurse.id.toString() == query
+            }
         }) {
             Text(text = "Buscar")
         }
+
         Spacer(modifier = Modifier.height(16.dp))
         foundNurse?.let {
             NurseCard(nurse = it)
