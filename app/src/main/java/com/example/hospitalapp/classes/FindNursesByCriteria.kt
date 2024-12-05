@@ -18,13 +18,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
     var query by remember { mutableStateOf("") }
     var foundNurse by remember { mutableStateOf<Nurse?>(null) }
-    var isSearchPerformed by remember { mutableStateOf(false) } // Nuevo estado para rastrear si se realizó la búsqueda
+    var isSearchPerformed by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -32,11 +33,10 @@ fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Botón "Back" en la parte superior izquierda
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 0.dp, top = 30.dp), // Alineado con el margen izquierdo de los demás elementos
+                .padding(start = 0.dp, top = 30.dp),
             contentAlignment = Alignment.TopStart
         ) {
             Button(onClick = onBackPressed) {
@@ -47,13 +47,17 @@ fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
         TextField(
             value = query,
             onValueChange = { query = it },
-            label = { Text("Buscar enfermero por nombre") },
+            label = { Text("Buscar enfermero") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            isSearchPerformed = true // Indicar que se realizó la búsqueda
-            foundNurse = createNurses.nurses.find { it.name.contains(query, ignoreCase = true) }
+            isSearchPerformed = true
+            foundNurse = createNurses.nurses.find { nurse ->
+                nurse.name.contains(query, ignoreCase = true) ||
+                        nurse.username.contains(query, ignoreCase = true) ||
+                        nurse.id.toString() == query
+            }
         }) {
             Text(text = "Buscar")
         }
@@ -61,7 +65,7 @@ fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
         foundNurse?.let {
             NurseCard(nurse = it)
         } ?: run {
-            if (isSearchPerformed && query.isNotEmpty()) { // Mostrar el mensaje solo si se realizó la búsqueda
+            if (isSearchPerformed && query.isNotEmpty()) {
                 Text(
                     text = "Enfermero no encontrado",
                     style = MaterialTheme.typography.bodyMedium
@@ -69,4 +73,15 @@ fun SearchScreen(createNurses: CreateNurses, onBackPressed: () -> Unit) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewFindByNameScreen() {
+    val createNurses = CreateNurses()
+
+    SearchScreen(
+        createNurses = createNurses,
+        onBackPressed = {}
+    )
 }

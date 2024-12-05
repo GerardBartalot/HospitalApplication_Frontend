@@ -3,84 +3,60 @@ package com.example.hospitalapp.classes
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.hospitalapp.classes.*
 import com.example.hospitalapp.ui.theme.HospitalAppTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             HospitalAppTheme {
-                MainScreen()
+                AppNavigation()
             }
         }
     }
 }
 
 @Composable
-fun MainScreen() {
-    var currentScreen by remember { mutableStateOf("Home") }
+fun AppNavigation() {
+    val navController = rememberNavController()
 
     Surface(modifier = Modifier.fillMaxSize()) {
-        when (currentScreen) {
-            "Home" -> HomeScreen(onNavigate = { currentScreen = it })
-            "Login" -> LoginScreen(modifier = Modifier.fillMaxSize(), onBackPressed = { currentScreen = "Home" })
-            "GetAll" -> NurseApp(viewModel = CreateNurses(), onBackPressed = { currentScreen = "Home" })
-            "FindByName" -> SearchScreen(createNurses = CreateNurses(), onBackPressed = { currentScreen = "Home" })
-        }
-    }
-}
-
-@Composable
-fun HomeScreen(onNavigate: (String) -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(0.dp, 150.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Hospital Application",
-            modifier = Modifier.fillMaxWidth(),
-            style = TextStyle(
-                textAlign = TextAlign.Center,
-                fontSize = 35.sp
-            )
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly
-        ) {
-            Button(onClick = { onNavigate("Login") }) {
-                Text(text = "Login", fontSize = 16.sp)
+        NavHost(navController = navController, startDestination = "register") {
+            composable("register") {
+                RegisterScreen(
+                    onBackPressed = {},
+                    onNavigateToLogin = { navController.navigate("login") }
+                )
             }
-            Button(onClick = { onNavigate("GetAll") }) {
-                Text(text = "GetAll", fontSize = 16.sp)
+            composable("login") {
+                LoginScreen(
+                    navController = navController,
+                    onBackPressed = { navController.popBackStack() }
+                )
             }
-            Button(onClick = { onNavigate("FindByName") }) {
-                Text(text = "FindByName", fontSize = 16.sp)
+            composable("getAll") {
+                NurseApp(
+                    viewModel = CreateNurses(),
+                    onBackPressed = { navController.popBackStack() }
+                )
+            }
+            composable("findByName") {
+                SearchScreen(
+                    createNurses = CreateNurses(),
+                    onBackPressed = { navController.popBackStack() }
+                )
+            }
+            composable("search") {
+                SearchScreen(navController = navController)
             }
         }
     }
 }
-
-@Preview(showBackground = true)
-@Composable
-fun HomeScreenPreview() {
-    HospitalAppTheme {
-        MainScreen()
-    }
-}
-

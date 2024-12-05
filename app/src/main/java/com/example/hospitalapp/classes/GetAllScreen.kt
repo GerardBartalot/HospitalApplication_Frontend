@@ -13,10 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hospitalapp.ui.theme.HospitalAppTheme
 
-// Modelo de datos
 data class Nurse(val id: Int, val name: String, val username: String)
 
-// Clase para manejar los datos hardcodeados
 class CreateNurses {
     val nurses = listOf(
         Nurse(1, "Nil Arroyo", "ni95_ar"),
@@ -30,7 +28,6 @@ class CreateNurses {
 fun NurseApp(viewModel: CreateNurses, onBackPressed: () -> Unit) {
     Surface(modifier = Modifier.fillMaxSize()) {
         Column {
-            // Botón colocado en la esquina superior izquierda
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -42,7 +39,6 @@ fun NurseApp(viewModel: CreateNurses, onBackPressed: () -> Unit) {
                 }
             }
             Spacer(modifier = Modifier.height(16.dp))
-            // Lista de enfermeros
             NurseList(nurses = viewModel.nurses)
         }
     }
